@@ -9,6 +9,8 @@ import android.util.Log;
 
 public class StopFunction implements FREFunction {
 	
+	
+	
 	@Override
 	public FREObject call(FREContext arg0, FREObject[] arg1) {
 		FREObject result = null;
@@ -18,11 +20,9 @@ public class StopFunction implements FREFunction {
 			
 			Activity activity = arg0.getActivity();
 			
-			if (activity.stopService(new Intent(activity, BackService.class))) {
-				result = FREObject.newObject(0);
-			} else {
-				result = FREObject.newObject(1);
-			}
+			activity.stopService(new Intent(activity, BackService.class));
+			
+			result = FREObject.newObject(Constants.RESULT_STOPPED);
 			
 		} catch (Exception e) {
 			Log.i(Constants.logTag, "Stop function error: " + e.getMessage());

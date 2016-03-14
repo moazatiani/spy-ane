@@ -22,14 +22,14 @@ public class CheckFunction implements FREFunction {
 			ActivityManager manager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
 	        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
 	            if (BackService.class.getName().equals(service.service.getClassName())) {
-	            	result = FREObject.newObject(1);
+	            	result = FREObject.newObject(Constants.RESULT_STARTED);
 	            	Log.i(Constants.logTag, "Check result: 1");
 	            	return result;
 	            }
 	        }
 	        
 	        Log.i(Constants.logTag, "Check result: 0");
-			result = FREObject.newObject(0);
+			result = FREObject.newObject(Constants.RESULT_STOPPED);
 		} catch (Exception e) {
 			Log.i(Constants.logTag, "Check function error");
 		}

@@ -9,6 +9,8 @@ import android.util.Log;
 
 public class StartFunction implements FREFunction {
 	
+	private final String RESULT_STARTED = "started";
+	
 	@Override
 	public FREObject call(FREContext arg0, FREObject[] arg1) {
 		
@@ -34,7 +36,7 @@ public class StartFunction implements FREFunction {
 			
 			activity.startService(intent);
 			
-			result = FREObject.newObject(0);
+			result = FREObject.newObject(Constants.RESULT_STARTED);
 		} catch (Exception e) {
 			Log.i(Constants.logTag, "Start function error: " + e.getMessage());
 		}
