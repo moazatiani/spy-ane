@@ -1,0 +1,16 @@
+<extension xmlns="http://ns.adobe.com/air/extension/20.0">
+	<id>com.crionuke.ane.spy</id>
+	<versionNumber>1.0.0</versionNumber>
+	<platforms>
+		<platform name="Android-ARM">
+			<applicationDeployment>
+				<nativeLibrary>com.crionuke.ane.spy.jar</nativeLibrary>
+				<initializer>com.crionuke.ane.spy.Extension</initializer>
+				<finalizer>com.crionuke.ane.spy.Extension</finalizer>
+			</applicationDeployment>
+		</platform>
+		<platform name="default">
+			<applicationDeployment/>
+		</platform> 
+	</platforms>
+</extension>

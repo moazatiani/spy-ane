@@ -1,0 +1,12 @@
+.metadata/
+.recommenders/
+.settings/
+
+.classpath
+.project
+
+bin/
+
+ane_ready_for_use/
+temp/
+
