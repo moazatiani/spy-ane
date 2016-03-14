@@ -65,6 +65,7 @@
 		<copy file="dependencies/android/android-depends.xml" tofile="temp/ane/android/android-depends.xml"/>
 		<!-- Include dependencies example (also need update dependencies\android\android-depends.xml file) -->
 		
+		<copy file="dependencies/android/android-support-v4.jar" tofile="temp/ane/android/android-support-v4.jar"/>
 		<copy file="dependencies/android/google-play-services.jar" tofile="temp/ane/android/google-play-services.jar"/>
 		<copy todir="temp/ane/android/google-play-services-res">
 			<fileset dir="dependencies/android/google-play-services-res"/>

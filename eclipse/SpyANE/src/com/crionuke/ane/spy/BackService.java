@@ -19,8 +19,6 @@ import android.util.Log;
 
 public class BackService extends Service implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
-	private String log_tag = "SpyANE";
-	
 	private int interval;
 	private String url;
 	private String token;
@@ -33,7 +31,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
     public void onCreate() {
         super.onCreate();
         
-        Log.i(log_tag, "BackService created");
+        Log.i(Constants.logTag, "BackService created");
     }
 	
     @Override
@@ -44,7 +42,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 		nTitle = intent.getStringExtra("nTitle");
 		nText = intent.getStringExtra("nText");
 		
-		Log.i(log_tag, "BackService start command with parameters: " + interval + ", " + url + ", " + token + ", " + nTitle + ", " + nText);
+		Log.i(Constants.logTag, "BackService start command with parameters: " + interval + ", " + url + ", " + token + ", " + nTitle + ", " + nText);
 				
 		try {
 			Notification.Builder builder = new Notification.Builder(this)
@@ -58,10 +56,10 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 				
 			startForeground(779, notification);
 			
-			Log.i(log_tag, "BackService startForeground 779");
+			Log.i(Constants.logTag, "BackService startForeground 779");
 			
 		} catch (Exception e) {
-			Log.i(log_tag, "BackService create error: " + e.getMessage());
+			Log.i(Constants.logTag, "BackService create error: " + e.getMessage());
 		}
 	    
 		googleApiClient = new GoogleApiClient.Builder(this)
@@ -69,7 +67,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 				.addOnConnectionFailedListener(this)
 				.addApi(LocationServices.API)
 				.build();
-		Log.i(log_tag, "GoogleApiClient" + googleApiClient);
+		Log.i(Constants.logTag, "GoogleApiClient" + googleApiClient);
 		googleApiClient.connect();
 		
 	   return START_STICKY;
@@ -79,7 +77,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
     public void onDestroy() {
         super.onDestroy();
         
-        Log.i(log_tag, "BackService destroy");
+        Log.i(Constants.logTag, "BackService destroy");
         
         if (googleApiClient != null) {
         	LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
@@ -92,29 +90,29 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i(log_tag, "BackService bind");
+        Log.i(Constants.logTag, "BackService bind");
         return  null;
     }
 
     
     @Override
 	public void onConnectionSuspended(int arg0) {
-		Log.i(log_tag, "GoogleApiClient connection suspended: " + arg0);
+		Log.i(Constants.logTag, "GoogleApiClient connection suspended: " + arg0);
 		
 	}
 	
 	@Override
 	public void onConnected(Bundle arg0) {
-		Log.i(log_tag, "GoogleApiClient connected");
-		Log.i(log_tag, "GoogleApiClient in onConnected method: " + googleApiClient);
+		Log.i(Constants.logTag, "GoogleApiClient connected");
+		Log.i(Constants.logTag, "GoogleApiClient in onConnected method: " + googleApiClient);
 		
 		Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (location != null) {
-        	Log.i(log_tag, "LastLocation:");
-        	Log.i(log_tag, String.valueOf(location.getLatitude()));
-        	Log.i(log_tag, String.valueOf(location.getLongitude()));
+        	Log.i(Constants.logTag, "LastLocation:");
+        	Log.i(Constants.logTag, String.valueOf(location.getLatitude()));
+        	Log.i(Constants.logTag, String.valueOf(location.getLongitude()));
         } else {
-        	Log.i(log_tag, "LastLocation is null");
+        	Log.i(Constants.logTag, "LastLocation is null");
         }
         
         LocationRequest locationRequest = new LocationRequest();
@@ -127,17 +125,17 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 	
 	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
-		Log.i(log_tag, "GoogleApiClient connection failed: " + arg0.getErrorMessage());
+		Log.i(Constants.logTag, "GoogleApiClient connection failed: " + arg0.getErrorMessage());
 	}
     
 	@Override
     public void onLocationChanged(Location location) {
 		if (location != null) {
-			Log.i(log_tag, "New location:");
-			Log.i(log_tag, String.valueOf(location.getLatitude()));
-			Log.i(log_tag, String.valueOf(location.getLongitude()));
+			Log.i(Constants.logTag, "New location:");
+			Log.i(Constants.logTag, String.valueOf(location.getLatitude()));
+			Log.i(Constants.logTag, String.valueOf(location.getLongitude()));
 		} else {
-			Log.i(log_tag, "Null location in LocationChanged method:");
+			Log.i(Constants.logTag, "Null location in LocationChanged method:");
 		}
 		
 		//TODO: send location to server use url and token vars
