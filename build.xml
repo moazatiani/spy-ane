@@ -70,6 +70,9 @@
 		<copy todir="temp/ane/android/google-play-services-res">
 			<fileset dir="dependencies/android/google-play-services-res"/>
 		</copy>
+		<copy todir="temp/ane/android/spy-ane-res">
+			<fileset dir="eclipse/SpyANE/res"/>
+		</copy>
 		
 		<unzip src="temp/lib/lib.swc" dest="temp/lib/"/>
 		<copy file="temp/lib/library.swf" tofile="temp/ane/android/library.swf"/>
@@ -90,7 +93,7 @@
 			<arg line="-platform default -C temp/ane/default ."/>
 		</exec>
 		<echo file="ane_ready_for_use/extension_id.txt">${EXTENSION_ID}</echo>
-		<delete dir="temp"/>
+		<!--<delete dir="temp"/>-->
 		<echo message="Your extension located in ane_ready_for_use folder."/>
 	</target>
 	

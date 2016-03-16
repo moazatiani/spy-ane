@@ -31,6 +31,7 @@ public class StartFunction implements FREFunction {
 			intent.putExtra("interval", interval);
 			intent.putExtra("url", url);
 			intent.putExtra("token", token);
+			intent.putExtra("nIcon", arg0.getResourceId("drawable.ic_launcher"));
 			intent.putExtra("nTitle", title);
 			intent.putExtra("nText", text);
 			

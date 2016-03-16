@@ -1,5 +1,10 @@
 package com.crionuke.ane.spy;
 
+import java.io.IOException;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -11,10 +16,13 @@ import com.google.android.gms.location.LocationServices;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.drawable.Icon;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.style.IconMarginSpan;
 import android.util.Log;
 
 public class BackService extends Service implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
@@ -22,6 +30,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 	private int interval;
 	private String url;
 	private String token;
+	private int nIcon;
 	private String nTitle;
 	private String nText;	
 	
@@ -39,21 +48,27 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 		interval = intent.getIntExtra("interval", 10);
 		url = intent.getStringExtra("url");
 		token = intent.getStringExtra("token");
+		nIcon = intent.getIntExtra("nIcon", 0);
 		nTitle = intent.getStringExtra("nTitle");
 		nText = intent.getStringExtra("nText");
 		
-		Log.i(Constants.logTag, "BackService start command with parameters: " + interval + ", " + url + ", " + token + ", " + nTitle + ", " + nText);
-				
+		Log.i(Constants.logTag, "BackService start command with parameters: " + interval + ", " + url + ", " + token + ", " + nIcon + ", " + nTitle + ", " + nText);
+		
 		try {
 			Notification.Builder builder = new Notification.Builder(this)
-						.setContentTitle(nTitle.toString())
-						.setContentInfo(nText.toString());
+				.setSmallIcon(nIcon)
+				.setTicker("Ticker Text")
+				.setSubText("Test sub text")
+				.setContentText("Test content text")
+				.setContentTitle("Test content title")
+				.setContentInfo("Test content info");
+			
 			Notification notification;
 			if (Build.VERSION.SDK_INT < 16)
 				notification = builder.getNotification();
 			else
 				notification = builder.build();
-				
+					
 			startForeground(779, notification);
 			
 			Log.i(Constants.logTag, "BackService startForeground 779");
@@ -62,6 +77,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 			Log.i(Constants.logTag, "BackService create error: " + e.getMessage());
 		}
 	    
+		
 		googleApiClient = new GoogleApiClient.Builder(this)
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this)
@@ -106,6 +122,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 		Log.i(Constants.logTag, "GoogleApiClient connected");
 		Log.i(Constants.logTag, "GoogleApiClient in onConnected method: " + googleApiClient);
 		
+		/*
 		Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (location != null) {
         	Log.i(Constants.logTag, "LastLocation:");
@@ -113,7 +130,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
         	Log.i(Constants.logTag, String.valueOf(location.getLongitude()));
         } else {
         	Log.i(Constants.logTag, "LastLocation is null");
-        }
+        }*/
         
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(interval * 1000);
@@ -134,10 +151,57 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 			Log.i(Constants.logTag, "New location:");
 			Log.i(Constants.logTag, String.valueOf(location.getLatitude()));
 			Log.i(Constants.logTag, String.valueOf(location.getLongitude()));
+			
+			String request = this.url + "/" + this.token + "/" + location.getLatitude() + "/" + location.getLongitude();
+			
+			Log.i(Constants.logTag, "Make SendGeo to " + request);
+			
+			SendGeo sendGeo = new SendGeo();
+			sendGeo.execute(request);
+			
+			Log.i(Constants.logTag, "4");
+			
 		} else {
 			Log.i(Constants.logTag, "Null location in LocationChanged method:");
 		}
 		
 		//TODO: send location to server use url and token vars
     }
+	
+	private class SendGeo extends AsyncTask<String, Void, Void> {
+		@Override
+	    protected Void doInBackground(String... params) {
+			
+			HttpsURLConnection connector = null;
+			
+			try {
+				
+				URL server = new URL(params[0]);
+				Log.i(Constants.logTag, "1");
+				connector = (HttpsURLConnection) server.openConnection();
+				if (connector != null) {
+					Log.i(Constants.logTag, "2");
+					if (connector.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+						Log.i(Constants.logTag, "HTTP OK");
+					} else {
+						Log.i(Constants.logTag, "FAILED");
+					}
+					Log.i(Constants.logTag, "2end");
+				} else {
+					Log.i(Constants.logTag, "Null connector");
+				}
+				
+				Log.i(Constants.logTag, "3");
+				
+			} catch (IOException e) {
+				Log.i(Constants.logTag, "IOException server request");
+			}
+			
+			if (connector != null) {
+				connector.disconnect();
+			}			
+			
+			return null;
+	    }
+	}
 }

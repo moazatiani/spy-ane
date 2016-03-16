@@ -8,5 +8,9 @@
 			<packageName>com.google.android.gms</packageName>
 			<folderName>google-play-services-res</folderName>
 		</packagedResource>
+		<packagedResource>
+			<packageName>com.crionuke.ane.spy</packageName>
+			<folderName>spy-ane-res</folderName>
+		</packagedResource>
 	</packagedResources>
 </platform>
