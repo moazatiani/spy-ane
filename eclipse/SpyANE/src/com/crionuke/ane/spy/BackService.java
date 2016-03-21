@@ -16,13 +16,11 @@ import com.google.android.gms.location.LocationServices;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.style.IconMarginSpan;
 import android.util.Log;
 
 public class BackService extends Service implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
@@ -30,9 +28,9 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 	private int interval;
 	private String url;
 	private String token;
-	private int nIcon;
-	private String nTitle;
-	private String nText;	
+	private int icon;
+	private String title;
+	private String text;	
 	
 	private GoogleApiClient googleApiClient = null;
 	
@@ -45,33 +43,33 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 	
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-		interval = intent.getIntExtra("interval", 10);
-		url = intent.getStringExtra("url");
-		token = intent.getStringExtra("token");
-		nIcon = intent.getIntExtra("nIcon", 0);
-		nTitle = intent.getStringExtra("nTitle");
-		nText = intent.getStringExtra("nText");
+		interval = intent.getIntExtra(Constants.SHARED_KEY_INTERVAL, Constants.SHARED_DEFAULT_INT_VALUE);
+		url = intent.getStringExtra(Constants.SHARED_KEY_URL);
+		token = intent.getStringExtra(Constants.SHARED_KEY_TOKEN);
+		icon = intent.getIntExtra(Constants.SHARED_KEY_ICON, Constants.SHARED_DEFAULT_INT_VALUE);
+		title = intent.getStringExtra(Constants.SHARED_KEY_TITLE);
+		text = intent.getStringExtra(Constants.SHARED_KEY_TEXT);
 		
-		Log.i(Constants.logTag, "BackService start command with parameters: " + interval + ", " + url + ", " + token + ", " + nIcon + ", " + nTitle + ", " + nText);
+		Log.i(Constants.logTag, "BackService start command with parameters: " + interval + ", " + url + ", " + token + ", " + icon + ", " + title + ", " + text);
 		
 		try {
 			Notification.Builder builder = new Notification.Builder(this)
-				.setSmallIcon(nIcon)
+				.setSmallIcon(icon)
 				.setTicker("Ticker Text")
 				.setSubText("Test sub text")
-				.setContentText("Test content text")
-				.setContentTitle("Test content title")
+				.setContentTitle(title)
+				.setContentText(text)
 				.setContentInfo("Test content info");
 			
 			Notification notification;
-			if (Build.VERSION.SDK_INT < 16)
+			/*if (Build.VERSION.SDK_INT < 16)
 				notification = builder.getNotification();
-			else
+			else*/
 				notification = builder.build();
 					
-			startForeground(779, notification);
+			startForeground(Constants.BACKSERVICE_ID, notification);
 			
-			Log.i(Constants.logTag, "BackService startForeground 779");
+			Log.i(Constants.logTag, "BackService startForeground");
 			
 		} catch (Exception e) {
 			Log.i(Constants.logTag, "BackService create error: " + e.getMessage());
