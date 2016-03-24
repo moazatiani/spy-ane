@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 import java.util.Map;
 
-import com.adobe.air.ActivityResultCallback;
+import com.adobe.air.SpyANEActivityResultCallback;
 import com.adobe.air.AndroidActivityWrapper;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
@@ -11,7 +11,7 @@ import com.adobe.fre.FREFunction;
 import android.content.Intent;
 import android.util.Log;
 
-public class Context extends FREContext implements ActivityResultCallback {
+public class Context extends FREContext implements SpyANEActivityResultCallback {
 
 	private AndroidActivityWrapper androidActivityWrapper;
 	

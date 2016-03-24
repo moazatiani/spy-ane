@@ -11,8 +11,6 @@ import android.util.Log;
 
 public class StartFunction implements FREFunction {
 	
-	private final String RESULT_STARTED = "started";
-	
 	@Override
 	public FREObject call(FREContext arg0, FREObject[] arg1) {
 		
