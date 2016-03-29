@@ -13,8 +13,9 @@
 	<property name="JAVA_RT_JAR" value="C:\Java\jdk1.8.0_66\jre\lib\rt.jar" />
 	
 	<property name="GOOGLE_JAR" value="eclipse/SpyANE/libs/google-play-services.jar" />
-	
 	<property name="JAVA_SOURCES" value="eclipse/SpyANE/src" />
+	
+	<property name="TARGET_PROJECT" value="D:\repos\whereis\whereis-client" />
 
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
 	
@@ -95,4 +96,10 @@
 	
 	<target name="total.build" description="Run all targets" depends="clear.dirs, make.dirs, compile.swc, compile.jar, copy.files, build.ane" />
 
+	<target name="total.build.and.copy" depends="total.build">
+		<copy file="ane_ready_for_use\${EXTENSION_ID}.ane" tofile="${TARGET_PROJECT}\ane\${EXTENSION_ID}.ane"/>
+		<delete dir="D:\repos\whereis\whereis-client\exts\${EXTENSION_ID}.ane"/>
+		<unzip src="ane_ready_for_use/${EXTENSION_ID}.ane" dest="D:\repos\whereis\whereis-client\exts\${EXTENSION_ID}.ane"/>
+	</target>
+	
 </project>
