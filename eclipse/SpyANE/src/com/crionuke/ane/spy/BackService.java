@@ -54,11 +54,11 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 		try {
 			Notification.Builder builder = new Notification.Builder(this)
 				.setSmallIcon(icon)
-				.setTicker("Ticker Text")
-				.setSubText("Test sub text")
+				//.setTicker("Ticker Text")
+				//.setSubText("Test sub text")
 				.setContentTitle(title)
-				.setContentText(text)
-				.setContentInfo("Test content info");
+				.setContentText(text);
+				//.setContentInfo("Test content info");
 			
 			Notification notification;
 			/*if (Build.VERSION.SDK_INT < 16)
