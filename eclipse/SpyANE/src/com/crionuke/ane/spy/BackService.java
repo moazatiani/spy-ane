@@ -15,7 +15,9 @@ import com.google.android.gms.location.LocationServices;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,14 +44,30 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 	
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-		interval = intent.getIntExtra(Constants.SHARED_KEY_INTERVAL, Constants.SHARED_DEFAULT_INT_VALUE);
-		url = intent.getStringExtra(Constants.SHARED_KEY_URL);
-		token = intent.getStringExtra(Constants.SHARED_KEY_TOKEN);
-		icon = intent.getIntExtra(Constants.SHARED_KEY_ICON, Constants.SHARED_DEFAULT_INT_VALUE);
-		title = intent.getStringExtra(Constants.SHARED_KEY_TITLE);
-		text = intent.getStringExtra(Constants.SHARED_KEY_TEXT);
-		
-		Log.i(Constants.logTag, "BackService start command with parameters: " + interval + ", " + url + ", " + token + ", " + icon + ", " + title + ", " + text);
+    	if (intent == null) {
+	    	SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(Constants.SHARED_FILE_NAME, Context.MODE_PRIVATE);
+	    	if (sharedPref != null) {
+				interval = sharedPref.getInt(Constants.SHARED_KEY_INTERVAL, Constants.SHARED_DEFAULT_INT_VALUE);
+				url = sharedPref.getString(Constants.SHARED_KEY_URL, Constants.SHARED_DEFAULT_STRING_VALUE);
+				token = sharedPref.getString(Constants.SHARED_KEY_TOKEN, Constants.SHARED_DEFAULT_STRING_VALUE);
+				icon = sharedPref.getInt(Constants.SHARED_KEY_ICON, Constants.SHARED_DEFAULT_INT_VALUE);
+				title = sharedPref.getString(Constants.SHARED_KEY_TITLE, Constants.SHARED_DEFAULT_STRING_VALUE);
+				text = sharedPref.getString(Constants.SHARED_KEY_TEXT, Constants.SHARED_DEFAULT_STRING_VALUE);
+				
+				Log.i(Constants.logTag, "BackService restores parameters from shared preferences: " + interval + ", " + url + ", " + token + ", " + icon + ", " + title + ", " + text);
+	    	} else {
+	    		Log.i(Constants.logTag, "Shared preferences is null");
+	    	}
+    	} else {
+    		interval = intent.getIntExtra(Constants.SHARED_KEY_INTERVAL, Constants.SHARED_DEFAULT_INT_VALUE);
+			url = intent.getStringExtra(Constants.SHARED_KEY_URL);
+			token = intent.getStringExtra(Constants.SHARED_KEY_TOKEN);
+			icon = intent.getIntExtra(Constants.SHARED_KEY_ICON, Constants.SHARED_DEFAULT_INT_VALUE);
+			title = intent.getStringExtra(Constants.SHARED_KEY_TITLE);
+			text = intent.getStringExtra(Constants.SHARED_KEY_TEXT);
+			
+			Log.i(Constants.logTag, "BackService gets parameters from intent: " + interval + ", " + url + ", " + token + ", " + icon + ", " + title + ", " + text);
+    	}
 		
 		try {
 			Notification.Builder builder = new Notification.Builder(this)
@@ -73,8 +91,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 		} catch (Exception e) {
 			Log.i(Constants.logTag, "BackService create error: " + e.getMessage());
 		}
-	    
-		
+	    		
 		googleApiClient = new GoogleApiClient.Builder(this)
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this)
@@ -83,7 +100,7 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 		Log.i(Constants.logTag, "GoogleApiClient" + googleApiClient);
 		googleApiClient.connect();
 		
-	   return START_STICKY;
+    	return START_STICKY;
     }
 
     @Override
