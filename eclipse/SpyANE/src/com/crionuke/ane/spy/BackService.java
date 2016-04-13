@@ -165,8 +165,9 @@ public class BackService extends Service implements ConnectionCallbacks, OnConne
 			Log.i(Constants.logTag, "New location:");
 			Log.i(Constants.logTag, String.valueOf(location.getLatitude()));
 			Log.i(Constants.logTag, String.valueOf(location.getLongitude()));
+			Log.i(Constants.logTag, String.valueOf(location.getAccuracy()));
 			
-			String request = this.url + "/" + this.token + "/" + location.getLatitude() + "/" + location.getLongitude();
+			String request = this.url + "/" + this.token + "/" + location.getLatitude() + "/" + location.getLongitude() + "/" + location.getAccuracy();
 			
 			Log.i(Constants.logTag, "Make SendGeo to " + request);
 			
